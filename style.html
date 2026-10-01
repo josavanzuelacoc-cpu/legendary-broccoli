@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Will You Go on a Date With Me? 💕</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Poppins", Arial, sans-serif;
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #5a1f32;
+    }
+
+    /* Main Card */
+    .card {
+      position: relative;
+      width: min(90%, 520px);
+      min-height: 500px;
+      padding: 45px 30px;
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 30px;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(89, 18, 48, 0.25);
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .heart-icon {
+      font-size: 70px;
+      animation: heartbeat 1.2s infinite;
+      margin-bottom: 15px;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.15);
+      }
+    }
+
+    h1 {
+      font-size: clamp(28px, 7vw, 42px);
+      margin-bottom: 15px;
+      color: #e63963;
+    }
+
+    .message {
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 15px;
+      color: #6b3044;
+    }
+
+    .date-details {
+      margin: 20px auto 30px;
+      padding: 18px;
+      max-width: 360px;
+      background: #fff0f5;
+      border-radius: 18px;
+      border: 1px solid #ffd0dd;
+    }
+
+    .date-details p {
+      margin: 7px 0;
+      font-size: 15px;
+    }
+
+    .question {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 25px;
+      color: #d82e58;
+    }
+
+    /* Buttons */
+    .buttons {
+      position: relative;
+      width: 100%;
+      height: 90px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 50px;
+      padding: 14px 28px;
+      font-size: 17px;
+      font-weight: bold;
+      transition:
+        transform 0.25s ease,
+        opacity 0.25s ease,
+        background 0.25s ease;
+      user-select: none;
+    }
+
+    #yesBtn {
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      color: white;
+      box-shadow: 0 8px 20px rgba(255, 65, 108, 0.35);
+      z-index: 5;
+    }
+
+    #yesBtn:hover {
+      transform: scale(1.08);
+    }
+
+    /*
+      The No button starts normally.
+      JavaScript moves it around after each attempt.
+    */
+    #noBtn {
+      background: #eee;
+      color: #666;
+      position: relative;
+      z-index: 20;
+    }
+
+    /* Success Screen */
+    .success {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 30px;
+      padding: 50px 25px;
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .success.show {
+      display: flex;
+      animation: popIn 0.5s ease;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .success-heart {
+      font-size: 90px;
+      animation: heartbeat 1s infinite;
+      margin-bottom: 20px;
+    }
+
+    .success h2 {
+      color: #e63963;
+      font-size: 35px;
+      margin-bottom: 15px;
+    }
+
+    .success p {
+      font-size: 18px;
+      line-height: 1.6;
+      max-width: 380px;
+    }
+
+    .small-note {
+      margin-top: 25px;
+      font-size: 13px;
+      color: #999;
+    }
+
+    /* Floating hearts */
+    .floating-heart {
+      position: fixed;
+      bottom: -50px;
+      font-size: 25px;
+      pointer-events: none;
+      animation: floatUp linear forwards;
+      z-index: 1;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 500px) {
+      .card {
+        min-height: 540px;
+        padding: 35px 20px;
+      }
+
+      .heart-icon {
+        font-size: 55px;
+      }
+
+      .message {
+        font-size: 15px;
+      }
+
+      .buttons {
+        height: 120px;
+      }
+
+      button {
+        padding: 12px 22px;
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <!-- Main Invitation -->
+    <div id="invitation">
+
+      <div class="heart-icon">💖</div>
+
+      <h1>Hey, You! 💕</h1>
+
+      <p class="message">
+        I have a very important question to ask you...
+        and I hope you'll say yes. 🥰
+      </p>
+
+      <!-- Customize these details -->
+      <div class="date-details">
+        <p>📅 <strong>Date:</strong> This Saturday</p>
+        <p>🕖 <strong>Time:</strong> 7:00 PM</p>
+        <p>📍 <strong>Place:</strong> Somewhere special</p>
+        <p>🍰 <strong>Plan:</strong> Food, laughs & good company</p>
+      </div>
+
+      <p class="question">
+        Will you go on a date with me? 🥺👉👈
+      </p>
+
+      <div class="buttons">
+        <button id="yesBtn">Yes! 💗</button>
+        <button id="noBtn">No 😢</button>
+      </div>
+
+      <p class="small-note">
+        Choose carefully... 😏
+      </p>
+
+    </div>
+
+
+    <!-- Success Screen -->
+    <div class="success" id="successScreen">
+
+      <div class="success-heart">🥰💖</div>
+
+      <h2>YAAAAY! 💕</h2>
+
+      <p>
+        I knew you'd say yes! 😭❤️
+        <br><br>
+        It's officially a date!
+        <br>
+        I can't wait to see you. 🥰
+      </p>
+
+      <div class="small-note">
+        Prepare for an amazing time! ✨
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const successScreen = document.getElementById("successScreen");
+
+    let noClicks = 0;
+
+    /*
+      Every time "No" is attempted:
+      1. It moves somewhere else.
+      2. It gets smaller.
+      3. The Yes button gets bigger.
+      4. The text changes.
+    */
+
+    const noMessages = [
+      "No 😢",
+      "Are you sure? 🥺",
+      "Really? 😭",
+      "Think again! 💔",
+      "Please? 🥹",
+      "Don't do this 😭",
+      "One more chance? 💕",
+      "You can't escape! 😈",
+      "Just say YES! 💖"
+    ];
+
+    function moveNoButton() {
+
+      noClicks++;
+
+      /*
+        Change the text.
+      */
+      const messageIndex = Math.min(
+        noClicks,
+        noMessages.length - 1
+      );
+
+      noBtn.textContent = noMessages[messageIndex];
+
+
+      /*
+        Make the No button smaller after every attempt.
+      */
+      const newScale = Math.max(
+        0.25,
+        1 - noClicks * 0.10
+      );
+
+      noBtn.style.transform = `scale(${newScale})`;
+
+
+      /*
+        Make the Yes button bigger.
+      */
+      const yesScale = Math.min(
+        1.7,
+        1 + noClicks * 0.08
+      );
+
+      yesBtn.style.transform = `scale(${yesScale})`;
+
+
+      /*
+        After several attempts, make No button move
+        to a random position inside the browser window.
+      */
+
+      if (noClicks >= 2) {
+
+        noBtn.style.position = "fixed";
+
+        const buttonWidth = noBtn.offsetWidth;
+        const buttonHeight = noBtn.offsetHeight;
+
+        const maxX = window.innerWidth - buttonWidth - 20;
+        const maxY = window.innerHeight - buttonHeight - 20;
+
+        const randomX = Math.max(
+          10,
+          Math.random() * maxX
+        );
+
+        const randomY = Math.max(
+          10,
+          Math.random() * maxY
+        );
+
+        noBtn.style.left = `${randomX}px`;
+        noBtn.style.top = `${randomY}px`;
+      }
+
+
+      /*
+        After enough attempts, make the No button
+        extremely tiny.
+      */
+
+      if (noClicks >= 8) {
+        noBtn.style.opacity = "0";
+        noBtn.style.pointerEvents = "none";
+      }
+    }
+
+
+    /*
+      Desktop:
+      Move the No button when the mouse gets close.
+    */
+    noBtn.addEventListener("mouseenter", function () {
+
+      if (noClicks < 8) {
+        moveNoButton();
+      }
+
+    });
+
+
+    /*
+      Mobile:
+      Touching the No button also triggers the dodge.
+    */
+    noBtn.addEventListener("touchstart", function (event) {
+
+      event.preventDefault();
+
+      if (noClicks < 8) {
+        moveNoButton();
+      }
+
+    });
+
+
+    /*
+      If someone somehow manages to click No,
+      move it anyway.
+    */
+    noBtn.addEventListener("click", function (event) {
+
+      event.preventDefault();
+
+      if (noClicks < 8) {
+        moveNoButton();
+      }
+
+    });
+
+
+    /*
+      YES BUTTON
+    */
+    yesBtn.addEventListener("click", function () {
+
+      successScreen.classList.add("show");
+
+      /*
+        Create lots of hearts.
+      */
+      for (let i = 0; i < 40; i++) {
+        setTimeout(createHeart, i * 80);
+      }
+
+    });
+
+
+    /*
+      Create floating hearts in the background.
+    */
+    function createHeart() {
+
+      const heart = document.createElement("div");
+
+      heart.className = "floating-heart";
+
+      const hearts = [
+        "❤️",
+        "💕",
+        "💖",
+        "💗",
+        "💓",
+        "💘",
+        "💝",
+        "🥰"
+      ];
+
+      heart.textContent =
+        hearts[Math.floor(Math.random() * hearts.length)];
+
+      heart.style.left =
+        Math.random() * 100 + "vw";
+
+      heart.style.fontSize =
+        (15 + Math.random() * 30) + "px";
+
+      heart.style.animationDuration =
+        (4 + Math.random() * 5) + "s";
+
+      document.body.appendChild(heart);
+
+      /*
+        Remove it after the animation.
+      */
+      setTimeout(() => {
+        heart.remove();
+      }, 9000);
+    }
+
+
+    /*
+      Keep creating background hearts.
+    */
+    setInterval(createHeart, 900);
+
+  </script>
+
+</body>
+</html>
